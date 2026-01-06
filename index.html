@@ -8,41 +8,55 @@
   <script src="https://unpkg.com/@rive-app/canvas@2.15.0"></script>
 
   <style>
+    :root { color-scheme: light; }
+
     html, body {
       height: 100%;
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f6f6f6;
-      display: grid;
-      place-items: center;
-      gap: 16px;
     }
 
+    .wrap {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 20px 16px;
+      box-sizing: border-box;
+    }
+
+    /* Key idea: constrain by HEIGHT, let width follow (no squish) */
     canvas {
-      aspect-ratio: 603 / 1319;
-      width: min(80vw, 360px);
-      height: auto;
+      height: min(70vh, 560px);
+      width: auto;                 /* prevents stretching */
+      aspect-ratio: 603 / 1319;    /* keeps the DOM box correct */
       display: block;
     }
 
     button {
       padding: 10px 14px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid rgba(0,0,0,0.15);
       background: white;
       cursor: pointer;
     }
+
+    button:active { transform: translateY(1px); }
   </style>
 </head>
 <body>
 
-  <canvas id="packaroo" width="603" height="1319"></canvas>
-
-  <button id="completeBtn" type="button">Process Complete</button>
+  <div class="wrap">
+    <canvas id="packaroo" width="603" height="1319"></canvas>
+    <button id="completeBtn" type="button">Process Complete</button>
+  </div>
 
   <script>
-    // IMPORTANT: put your real state machine name here (exact match)
-    const STATE_MACHINE_NAME = "State Machine 1"; // or whatever you named it in Rive
+    // Put your exact state machine name here (case/spacing must match Rive)
+    const STATE_MACHINE_NAME = "State Machine 1";
 
     const canvas = document.getElementById("packaroo");
     const button = document.getElementById("completeBtn");
@@ -54,19 +68,18 @@
       src: "./kangaroo.riv",
       canvas,
       autoplay: true,
-      stateMachines: [STATE_MACHINE_NAME],   // <-- this is what makes SM run
+      stateMachines: [STATE_MACHINE_NAME],
       fit: rive.Fit.CONTAIN,
       alignment: rive.Alignment.CENTER,
 
       onLoad: () => {
-        // Grab the inputs for that state machine and find the one named "processComplete"
         const inputs = riveInstance.stateMachineInputs(STATE_MACHINE_NAME) || [];
         processCompleteInput = inputs.find(i => i.name === "processComplete");
 
-        console.log("State machine inputs:", inputs.map(i => `${i.name} (${i.type})`));
+        console.log("Inputs:", inputs.map(i => `${i.name} (${i.type})`));
 
         if (!processCompleteInput) {
-          console.error(`Couldn't find input "processComplete" on ${STATE_MACHINE_NAME}. Check the exact input name in Rive.`);
+          console.error(`Missing input "processComplete" on state machine "${STATE_MACHINE_NAME}".`);
         }
       },
 
@@ -76,14 +89,11 @@
     button.addEventListener("click", () => {
       if (!processCompleteInput) return;
 
-      // If it's a Trigger input, it will have .fire()
+      // Trigger inputs have .fire()
       if (typeof processCompleteInput.fire === "function") {
         processCompleteInput.fire();
       } else {
-        // If it’s a boolean/number input instead, set its value here.
-        // Example for boolean:
-        // processCompleteInput.value = true;
-        console.warn('"processComplete" is not a Trigger. It is:', processCompleteInput.type);
+        console.warn('"processComplete" is not a Trigger input. Type is:', processCompleteInput.type);
       }
     });
   </script>
