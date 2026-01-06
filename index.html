@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Packaroo</title>
 
+  <!-- Rive Web Runtime -->
   <script src="https://unpkg.com/@rive-app/canvas@2.15.0"></script>
 
   <style>
-    :root { color-scheme: light; }
-
     html, body {
       height: 100%;
       margin: 0;
@@ -23,17 +22,23 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 14px;
-      padding: 20px 16px;
+      gap: 16px;
+      padding: 20px;
       box-sizing: border-box;
     }
 
-    /* Key idea: constrain by HEIGHT, let width follow (no squish) */
+    /* Preserve 603×1319 aspect ratio, constrain by height */
     canvas {
       height: min(70vh, 560px);
-      width: auto;                 /* prevents stretching */
-      aspect-ratio: 603 / 1319;    /* keeps the DOM box correct */
+      width: auto;
+      aspect-ratio: 603 / 1319;
       display: block;
+      pointer-events: none; /* canvas does not block button clicks */
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
     }
 
     button {
@@ -41,60 +46,65 @@
       border-radius: 12px;
       border: 1px solid rgba(0,0,0,0.15);
       background: white;
+      font-size: 14px;
       cursor: pointer;
     }
 
-    button:active { transform: translateY(1px); }
+    button:active {
+      transform: translateY(1px);
+    }
   </style>
 </head>
 <body>
 
   <div class="wrap">
     <canvas id="packaroo" width="603" height="1319"></canvas>
-    <button id="completeBtn" type="button">Process Complete</button>
+
+    <div class="controls">
+      <button id="completeBtn" type="button">Process Complete</button>
+      <button id="resetBtn" type="button">Reset</button>
+    </div>
   </div>
 
   <script>
-    // Put your exact state machine name here (case/spacing must match Rive)
-    const STATE_MACHINE_NAME = "State Machine 1";
+    const STATE_MACHINE_NAME = "State Machine 1"; // exact name from Rive
 
     const canvas = document.getElementById("packaroo");
-    const button = document.getElementById("completeBtn");
+    const completeBtn = document.getElementById("completeBtn");
+    const resetBtn = document.getElementById("resetBtn");
 
     let riveInstance;
     let processCompleteInput;
 
-    riveInstance = new rive.Rive({
-      src: "./kangaroo.riv",
-      canvas,
-      autoplay: true,
-      stateMachines: [STATE_MACHINE_NAME],
-      fit: rive.Fit.CONTAIN,
-      alignment: rive.Alignment.CENTER,
+    function loadRive() {
+      riveInstance = new rive.Rive({
+        src: "./kangaroo.riv",
+        canvas,
+        autoplay: true,
+        stateMachines: [STATE_MACHINE_NAME],
+        fit: rive.Fit.CONTAIN,
+        alignment: rive.Alignment.CENTER,
 
-      onLoad: () => {
-        const inputs = riveInstance.stateMachineInputs(STATE_MACHINE_NAME) || [];
-        processCompleteInput = inputs.find(i => i.name === "processComplete");
-
-        console.log("Inputs:", inputs.map(i => `${i.name} (${i.type})`));
-
-        if (!processCompleteInput) {
-          console.error(`Missing input "processComplete" on state machine "${STATE_MACHINE_NAME}".`);
+        onLoad: () => {
+          const inputs = riveInstance.stateMachineInputs(STATE_MACHINE_NAME) || [];
+          processCompleteInput = inputs.find(i => i.name === "processComplete");
         }
-      },
+      });
+    }
 
-      onLoadError: (err) => console.error("Rive load error:", err),
+    loadRive();
+
+    completeBtn.addEventListener("click", () => {
+      if (processCompleteInput?.fire) {
+        processCompleteInput.fire();
+      }
     });
 
-    button.addEventListener("click", () => {
-      if (!processCompleteInput) return;
-
-      // Trigger inputs have .fire()
-      if (typeof processCompleteInput.fire === "function") {
-        processCompleteInput.fire();
-      } else {
-        console.warn('"processComplete" is not a Trigger input. Type is:', processCompleteInput.type);
+    resetBtn.addEventListener("click", () => {
+      if (riveInstance) {
+        riveInstance.cleanup(); // hard reset
       }
+      loadRive();               // Entry → intro → idle again
     });
   </script>
 
