@@ -1,12 +1,43 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Packaroo</title>
-  </head>
-  <body>
-    <h1>Packaroo</h1>
-    <p>Support: <a href="mailto:support@packaroo.app">support@packaroo.app</a></p>
-    <p><a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a></p>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packaroo</title>
+
+  <!-- Rive Web Runtime -->
+  <script src="https://unpkg.com/@rive-app/canvas@2.15.0"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #f6f6f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    canvas {
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="packarooCanvas" width="600" height="900"></canvas>
+
+  <script>
+    const riveInstance = new rive.Rive({
+      src: "kangaroo.riv",
+      canvas: document.getElementById("packarooCanvas"),
+      autoplay: true,
+      stateMachines: "State Machine 1", // optional
+      fit: rive.Fit.CONTAIN,
+      alignment: rive.Alignment.CENTER,
+    });
+  </script>
+
+</body>
 </html>
