@@ -5,108 +5,270 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Packaroo</title>
 
-  <!-- Rive Web Runtime -->
   <script src="https://unpkg.com/@rive-app/canvas@2.15.0"></script>
 
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f6f6f6;
+    :root{
+      --bg: #f6f6f6;
+      --card: #ffffff;
+      --text: #0b0b0f;
+      --muted: rgba(11,11,15,.7);
+      --border: rgba(11,11,15,.12);
+      --shadow: 0 12px 40px rgba(11,11,15,.10);
+      --radius: 18px;
+      --max: 1080px;
     }
 
-    .wrap {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page{
+      min-height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 18px;
+    }
+
+    .shell{
+      width: 100%;
+      max-width: var(--max);
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
       align-items: center;
-      justify-content: center;
-      gap: 16px;
-      padding: 20px;
-      box-sizing: border-box;
     }
 
-    /* Preserve 603×1319 aspect ratio, constrain by height */
-    canvas {
-      height: min(70vh, 560px);
-      width: auto;
-      aspect-ratio: 603 / 1319;
-      display: block;
-      pointer-events: none; /* canvas does not block button clicks */
+    @media (max-width: 900px){
+      .shell{
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
     }
 
-    .controls {
-      display: flex;
-      gap: 12px;
+    .kicker{
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
     }
 
-    button {
+    h1{
+      font-size: clamp(34px, 4.2vw, 56px);
+      line-height: 1.02;
+      margin: 0 0 12px 0;
+      letter-spacing: -0.03em;
+    }
+
+    .subhead{
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--muted);
+      margin: 0 0 18px 0;
+      max-width: 42ch;
+    }
+
+    .ctaRow{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      margin: 10px 0 14px;
+    }
+
+    .input{
+      display:flex;
+      gap:10px;
+      padding: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      width: min(520px, 100%);
+    }
+
+    input[type="email"]{
+      border:none;
+      outline:none;
+      background: transparent;
+      font-size: 14px;
+      width: 100%;
+      color: var(--text);
+    }
+
+    .btn{
+      border: 1px solid var(--border);
+      background: var(--text);
+      color: white;
       padding: 10px 14px;
       border-radius: 12px;
-      border: 1px solid rgba(0,0,0,0.15);
-      background: white;
+      cursor:pointer;
       font-size: 14px;
-      cursor: pointer;
+      white-space: nowrap;
     }
 
-    button:active {
-      transform: translateY(1px);
+    .btn.secondary{
+      background: transparent;
+      color: var(--text);
+    }
+
+    .note{
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 18px 0;
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 14px;
+      padding: 0;
+      margin: 18px 0 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 520px){
+      .features{ grid-template-columns: 1fr; }
+    }
+
+    .features li{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    .dot{
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(11,11,15,.35);
+      flex: 0 0 auto;
+    }
+
+    /* --- Hero (device image + Rive overlay) --- */
+    .hero{
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1.05;
+      border-radius: var(--radius);
+      background: radial-gradient(120% 120% at 30% 20%, #ffffff 0%, #f2f2f2 60%, #ededed 100%);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display:grid;
+      place-items:center;
+      padding: 18px;
+    }
+
+    .device{
+      width: min(420px, 92%);
+      height: auto;
+      display:block;
+      filter: drop-shadow(0 18px 40px rgba(11,11,15,.18));
+    }
+
+    .riveOverlay{
+      position:absolute;
+      right: 16px;
+      bottom: 16px;
+
+      /* Size of the Rive box */
+      width: 140px;
+      aspect-ratio: 603 / 1319; /* your artboard ratio */
+      pointer-events: none;     /* overlay won't block clicks */
+    }
+
+    .riveOverlay canvas{
+      width: 100%;
+      height: 100%;
+      display:block;
+    }
+
+    footer{
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    footer a{
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(11,11,15,.2);
     }
   </style>
 </head>
+
 <body>
+  <div class="page">
+    <div class="shell">
 
-  <div class="wrap">
-    <canvas id="packaroo" width="603" height="1319"></canvas>
+      <!-- Left: copy -->
+      <section>
+        <div class="kicker">Coming soon</div>
+        <h1>Pack smarter. Stress less.</h1>
+        <p class="subhead">
+          Packaroo helps gear-head travelers build dialed packing lists—fast, repeatable, and shareable.
+        </p>
 
-    <div class="controls">
-      <button id="completeBtn" type="button">Process Complete</button>
-      <button id="resetBtn" type="button">Reset</button>
+        <!-- Replace this with your real waitlist form action (Buttondown/Mailchimp/etc.) -->
+        <div class="ctaRow">
+          <form class="input" onsubmit="event.preventDefault(); alert('Hook this up to your email provider.');">
+            <input type="email" required placeholder="Email address" aria-label="Email address" />
+            <button class="btn" type="submit">Join waitlist</button>
+          </form>
+          <a class="btn secondary" href="./privacy.html">Privacy</a>
+          <a class="btn secondary" href="./terms.html">Terms</a>
+        </div>
+
+        <p class="note">No spam. Just Packaroo updates.</p>
+
+        <ul class="features">
+          <li><span class="dot"></span>Smart checklists</li>
+          <li><span class="dot"></span>Gear-based templates</li>
+          <li><span class="dot"></span>Trip bundles</li>
+          <li><span class="dot"></span>Shareable lists</li>
+          <li><span class="dot"></span>Offline-friendly</li>
+          <li><span class="dot"></span>iCloud sync</li>
+        </ul>
+
+        <footer>Built in Colorado. <a href="mailto:support@packaroo.app">support@packaroo.app</a></footer>
+      </section>
+
+      <!-- Right: hero -->
+      <section class="hero" aria-label="App preview">
+        <!-- Put your device/hero image here -->
+        <img class="device" src="./device-hero.png" alt="Packaroo app preview on device" />
+
+        <!-- Rive overlay anchored bottom-right -->
+        <div class="riveOverlay" aria-hidden="true">
+          <canvas id="packarooRive" width="603" height="1319"></canvas>
+        </div>
+      </section>
+
     </div>
   </div>
 
   <script>
-    const STATE_MACHINE_NAME = "State Machine 1"; // exact name from Rive
+    const STATE_MACHINE_NAME = "State Machine 1"; // change if yours differs
+    const canvas = document.getElementById("packarooRive");
 
-    const canvas = document.getElementById("packaroo");
-    const completeBtn = document.getElementById("completeBtn");
-    const resetBtn = document.getElementById("resetBtn");
-
-    let riveInstance;
-    let processCompleteInput;
-
-    function loadRive() {
-      riveInstance = new rive.Rive({
-        src: "./kangaroo.riv",
-        canvas,
-        autoplay: true,
-        stateMachines: [STATE_MACHINE_NAME],
-        fit: rive.Fit.CONTAIN,
-        alignment: rive.Alignment.CENTER,
-
-        onLoad: () => {
-          const inputs = riveInstance.stateMachineInputs(STATE_MACHINE_NAME) || [];
-          processCompleteInput = inputs.find(i => i.name === "processComplete");
-        }
-      });
-    }
-
-    loadRive();
-
-    completeBtn.addEventListener("click", () => {
-      if (processCompleteInput?.fire) {
-        processCompleteInput.fire();
-      }
-    });
-
-    resetBtn.addEventListener("click", () => {
-      if (riveInstance) {
-        riveInstance.cleanup(); // hard reset
-      }
-      loadRive();               // Entry → intro → idle again
+    new rive.Rive({
+      src: "./kangaroo.riv",
+      canvas,
+      autoplay: true,
+      stateMachines: [STATE_MACHINE_NAME],
+      fit: rive.Fit.CONTAIN,
+      alignment: rive.Alignment.CENTER,
     });
   </script>
-
 </body>
 </html>
