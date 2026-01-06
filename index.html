@@ -30,30 +30,16 @@ canvas { border: 2px solid red; width: 300px; height: 300px; }
 
   <canvas id="packarooCanvas" width="600" height="900"></canvas>
 
-  <script src="https://unpkg.com/@rive-app/canvas@2.15.0"></script>
-
-<canvas id="packaroo" width="800" height="800" style="width:320px;height:320px;border:2px solid red;"></canvas>
-
-<script>
-  const canvas = document.getElementById("packaroo");
-
-  console.log("Rive runtime loaded?", typeof rive !== "undefined");
-
-  const r = new rive.Rive({
-    src: "./kangaroo.riv",          // NOTE: explicit ./ is important on Pages
-    canvas,
-    autoplay: true,
-    fit: rive.Fit.CONTAIN,
-    alignment: rive.Alignment.CENTER,
-    onLoad: () => console.log("✅ .riv loaded"),
-    onLoadError: (err) => console.error("❌ .riv failed to load", err),
-  });
-
-  // Extra: log fetch failures that don't surface nicely
-  fetch("./kangaroo.riv", { cache: "no-store" })
-    .then(res => console.log("Fetch .riv status:", res.status, res.headers.get("content-type")))
-    .catch(e => console.error("Fetch .riv error:", e));
-</script>
+  <script>
+    const riveInstance = new rive.Rive({
+      src: "kangaroo.riv",
+      canvas: document.getElementById("packarooCanvas"),
+      autoplay: true,
+      stateMachines: "State Machine 1", // optional
+      fit: rive.Fit.CONTAIN,
+      alignment: rive.Alignment.CENTER,
+    });
+  </script>
 
 </body>
 </html>
