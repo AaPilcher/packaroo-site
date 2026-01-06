@@ -156,6 +156,23 @@
       background: rgba(11,11,15,.35);
       flex: 0 0 auto;
     }
+    
+    .legal {
+  margin-top: 1.25rem;        /* pushes them down */
+  font-size: 0.75rem;      /* small but readable */
+  opacity: 0.55;           /* visually de-emphasized */
+  text-align: left;
+}
+
+.legal a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.legal a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
 
     /* --- Hero (device image + Rive overlay) --- */
     .hero{
@@ -231,8 +248,7 @@
             <input type="email" required placeholder="Email address" aria-label="Email address" />
             <button class="btn" type="submit">Join waitlist</button>
           </form>
-                 <a class="btn secondary" href="./privacy.html">Privacy</a>
-          <a class="btn secondary" href="./terms.html">Terms</a>
+                 
         </div>
 
         <p class="note">No spam. Just Packaroo updates.</p>
@@ -248,6 +264,12 @@
 
         <footer>Built in Colorado. <a href="mailto:support@packaroo.app">support@packaroo.app</a>
         </footer>
+        
+        <footer class="legal">
+		  <a href="/terms.html">Terms</a>
+		  <span>·</span>
+		  <a href="/privacy.html">Privacy</a>
+</footer>
 
       </section>
 
