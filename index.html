@@ -9,33 +9,37 @@
   <script src="https://unpkg.com/@rive-app/canvas@2.15.0"></script>
 
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       background: #f6f6f6;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     canvas {
-      width: 300px;
-      height: 300px;
+      width: min(80vw, 320px);
+      height: auto;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <canvas id="packarooCanvas" width="600" height="900"></canvas>
+  <!-- High internal resolution for Retina -->
+  <canvas id="packaroo" width="800" height="800"></canvas>
 
   <script>
-    const riveInstance = new rive.Rive({
-      src: "kangaroo.riv",
-      canvas: document.getElementById("packarooCanvas"),
+    new rive.Rive({
+      src: "./kangaroo.riv",
+      canvas: document.getElementById("packaroo"),
       autoplay: true,
-      stateMachines: "State Machine 1", // optional
       fit: rive.Fit.CONTAIN,
       alignment: rive.Alignment.CENTER,
+      // stateMachines: ["Main"], // optional — add later if needed
     });
   </script>
 
