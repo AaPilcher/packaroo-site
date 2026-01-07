@@ -208,7 +208,8 @@
       width: 100%;
       aspect-ratio: 1 / 1.05;
       border-radius: var(--radius);
-      background: radial-gradient(120% 120% at 30% 20%, #ffffff 0%, #f2f2f2 60%, #ededed 100%);
+      background: radial-gradient(120% 120% at 30% 15%, #ffffff 0%, #eef5fb 40%, #e3edf6 70%, #dde7f0 100%),
+    linear-gradient(180deg, #f9fcff 0%, #edf3f8 100%);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       overflow: hidden;
@@ -216,6 +217,14 @@
       place-items:center;
       padding: 18px;
     }
+
+	.hero::after{
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+	pointer-events: none;
+}
 
     .device{
       width: min(420px, 92%);
@@ -261,7 +270,7 @@
 
       <!-- Left: copy -->
       <section>
-        <div class="kicker">Major Update Coming soon</div>
+        <div class="kicker">Coming soon</div>
 		 <h1 class="hero-title">
 		  Jump Start<br />
 		  <span class="title-line">
@@ -274,6 +283,7 @@
         <p class="subhead">
           Packaroo is the smartest way to prep and pack for your next adventure. Designed to handle simple trip planning as well as the systems used by pro travelers.
         </p>
+        
          <ul class="features">
 			  <li><span class="dot"></span>Create complete packing lists in under 3 minutes.</li>
 			  <li><span class="dot"></span>Create reusable bundles of gear you always bring.</li>
