@@ -51,6 +51,34 @@
         gap: 18px;
       }
     }
+    
+	.hero-title {
+	  font-size: clamp(34px, 4.2vw, 56px);
+	  line-height: 1.05;
+	  letter-spacing: -0.03em;
+	  margin: 0 0 0.25rem 0;
+	}
+	
+	/* This line keeps “Your Pack Lists + kangaroo” on one baseline */
+	.title-line {
+	  display: inline-flex;
+	  align-items: baseline;
+	  gap: 0.28em;
+	}
+	
+	/* Inline wrapper so the canvas behaves like text */
+	.kangaroo {
+	  display: inline-flex;
+	  align-items: baseline;
+	}
+	
+	/* Size the kangaroo relative to the font size */
+	.kangaroo canvas {
+	  height: 0.95em;          /* tweak 0.85–1.05em to taste */
+	  width: auto;
+	  vertical-align: baseline;
+	  transform: translateY(0.08em); /* tweak 0.00–0.14em to taste */
+	}
 
     .kicker{
       font-size: 13px;
@@ -234,9 +262,14 @@
       <!-- Left: copy -->
       <section>
         <div class="kicker">Major Update Coming soon</div>
-        <h1>
-		  Jump Start<br>
-		  Your <span class="accent">Pack Lists</span>
+		 <h1 class="hero-title">
+		  Jump Start<br />
+		  <span class="title-line">
+			Your <span class="accent">Pack Lists</span>
+			<span class="kangaroo" aria-hidden="true">
+			  <canvas id="rive-kangaroo"></canvas>
+			</span>
+		  </span>
 		</h1>
         <p class="subhead">
           Packaroo is the smartest way to prep and pack for your next adventure. Designed to handle simple trip planning as well as the systems used by pro travelers.
@@ -288,18 +321,21 @@
     </div>
   </div>
 
-  <script>
-    const STATE_MACHINE_NAME = "State Machine 1"; // change if yours differs
-    const canvas = document.getElementById("packarooRive");
+ <script>
+  const STATE_MACHINE_NAME = "State Machine 1";
 
-    new rive.Rive({
-      src: "./kangaroo.riv",
-      canvas,
-      autoplay: true,
-      stateMachines: [STATE_MACHINE_NAME],
-      fit: rive.Fit.CONTAIN,
-      alignment: rive.Alignment.CENTER,
-    });
-  </script>
+  const canvas = document.getElementById("rive-kangaroo");
+
+  new rive.Rive({
+    src: "./kangaroo.riv",
+    canvas,
+    autoplay: true,
+    stateMachines: [STATE_MACHINE_NAME],
+
+    // IMPORTANT for inline text usage
+    fit: rive.Fit.CONTAIN,
+    alignment: rive.Alignment.BOTTOM_CENTER,
+  });
+</script>
 </body>
 </html>
