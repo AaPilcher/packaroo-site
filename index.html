@@ -51,67 +51,108 @@
         gap: 18px;
       }
     }
-    
-	.hero-title {
-	  font-size: clamp(34px, 4.2vw, 56px);
-	  line-height: .95;
-	  letter-spacing: -0.03em;
-	  margin: .2rem 0 0.25rem 0;
-	}
-	
-	/* This line keeps “Your Pack Lists + kangaroo” on one baseline */
-	.title-line {
-	  display: inline-flex;
-	  align-items: baseline;
-	  gap: 0.28em;
-	}
-	
-	/* Inline wrapper so the canvas behaves like text */
-	.kangaroo {
-	  display: inline-flex;
-	  align-items: baseline;
-	}
-	
-	/* Size the kangaroo relative to the font size */
-	.kangaroo canvas {
-	  height: 0.95em;          /* tweak 0.85–1.05em to taste */
-	  width: auto;
-	  vertical-align: baseline;
-	  transform: translateY(0.08em); /* tweak 0.00–0.14em to taste */
-	}
 
-    .kicker{
-      font-size: 13px;
-      letter-spacing: .12em;
+    /* --- Status badge --- */
+    .status-badge {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(198,62,19,0.08);
+      color: #C63E13;
+
+      /* rhythm */
+      margin: 0 0 1rem 0;
     }
 
-    h1 {
-	  font-size: clamp(34px, 4.2vw, 56px);
-	  line-height: 1.05;
-	  letter-spacing: -0.03em;
-	  margin: 0 0 0.25rem 0;   /* top right bottom left */
-	}
+    /* --- Headline --- */
+    .hero-title{
+      font-size: clamp(34px, 4.2vw, 56px);
+      line-height: 1.02;        /* a touch more comfortable than .95 */
+      letter-spacing: -0.03em;
 
-	.accent {
-	  color: #C63E13;
-	}
+      /* rhythm */
+      margin: 0 0 0.75rem 0;
+    }
 
+    .accent { color: #C63E13; }
+
+    /* --- Inline kangaroo (kept, but NOT driving layout too much) --- */
+    .title-line{
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.22em;
+      flex-wrap: wrap;          /* prevents weird overflow on narrower widths */
+    }
+
+    .kangaroo{
+      display: inline-flex;
+      align-items: baseline;
+    }
+
+    .kangaroo canvas{
+      height: 0.95em;
+      width: auto;
+      vertical-align: baseline;
+      transform: translateY(0.08em);
+    }
+
+    /* --- Subhead --- */
     .subhead{
       font-size: 16px;
       line-height: 1.55;
       color: var(--muted);
-      margin: 0 0 18px 0;
       max-width: 42ch;
+
+      /* rhythm */
+      margin: 0 0 1.25rem 0;
     }
 
+    /* --- Features --- */
+    .features{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 18px;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 14px;
+
+      /* rhythm */
+      margin: 0 0 1.5rem 0;
+    }
+
+    @media (max-width: 520px){
+      .features{ grid-template-columns: 1fr; }
+    }
+
+    .features li{
+      display:flex;
+      align-items:flex-start;   /* better with multi-line bullets */
+      gap: 10px;
+      line-height: 1.45;
+    }
+
+    .dot{
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(11,11,15,.35);
+      flex: 0 0 auto;
+      margin-top: 0.45em;       /* centers dot visually with first line */
+    }
+
+    /* --- CTA --- */
     .ctaRow{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
       align-items:center;
-      margin: 10px 0 14px;
+
+      /* rhythm */
+      margin: 0 0 0.75rem 0;
     }
 
     .input{
@@ -145,62 +186,47 @@
       white-space: nowrap;
     }
 
-    .btn.secondary{
-      background: transparent;
-      color: var(--text);
-    }
-
     .note{
       font-size: 13px;
       color: var(--muted);
-      margin: 0 0 18px 0;
+
+      /* rhythm */
+      margin: 0 0 1.25rem 0;
     }
 
-    .features{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 14px;
-      padding: 0;
-      margin: 18px 0 18px;
-      list-style: none;
+    /* --- Footer / Legal --- */
+    footer{
+      font-size: 13px;
       color: var(--muted);
-      font-size: 14px;
+      margin: 0;
     }
 
-    @media (max-width: 520px){
-      .features{ grid-template-columns: 1fr; }
+    footer + footer{
+      margin-top: 0.75rem;      /* legal sits close but distinct */
     }
 
-    .features li{
-      display:flex;
-      align-items:center;
-      gap: 10px;
+    footer a{
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(11,11,15,.2);
     }
 
-    .dot{
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: rgba(11,11,15,.35);
-      flex: 0 0 auto;
+    .legal {
+      font-size: 0.75rem;
+      opacity: 0.55;
+      text-align: left;
     }
-    
-	.legal {
-	  margin-top: 1.25rem;        /* pushes them down */
-	  font-size: 0.75rem;      /* small but readable */
-	  opacity: 0.55;           /* visually de-emphasized */
-	  text-align: left;
-	}
-	
-	.legal a {
-	  color: inherit;
-	  text-decoration: none;
-	}
-	
-	.legal a:hover {
-	  opacity: 1;
-	  text-decoration: underline;
-	}
+
+    .legal a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(11,11,15,.2);
+    }
+
+    .legal a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
 
     /* --- Hero (device image + Rive overlay) --- */
     .hero{
@@ -208,8 +234,9 @@
       width: 100%;
       aspect-ratio: 1 / 1.05;
       border-radius: var(--radius);
-      background: radial-gradient(120% 120% at 30% 15%, #ffffff 0%, #eef5fb 40%, #e3edf6 70%, #dde7f0 100%),
-    linear-gradient(180deg, #f9fcff 0%, #edf3f8 100%);
+      background:
+        radial-gradient(120% 120% at 30% 15%, #ffffff 0%, #eef5fb 40%, #e3edf6 70%, #dde7f0 100%),
+        linear-gradient(180deg, #f9fcff 0%, #edf3f8 100%);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       overflow: hidden;
@@ -218,61 +245,38 @@
       padding: 18px;
     }
 
-	.hero::after{
-	content: "";
-	position: absolute;
-	inset: 0;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
-	pointer-events: none;
-}
+    .hero::after{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
 
     .device{
       width: min(420px, 92%);
       height: auto;
       display:block;
       filter: drop-shadow(0 18px 40px rgba(11,11,15,.18));
+      position: relative;
+      z-index: 1;
     }
 
     .riveOverlay{
-	  position: absolute;
-	  right: 0px;
-	  bottom: -12px;
-	  width: 180px;              /* adjust size here */
-	  aspect-ratio: 603 / 1319;
-	  pointer-events: none;
-	  z-index: 2;
-}
+      position: absolute;
+      right: 0;
+      bottom: -12px;            /* keeps feet seated visually */
+      width: 180px;
+      aspect-ratio: 603 / 1319;
+      pointer-events: none;
+      z-index: 2;
+    }
 
     .riveOverlay canvas{
       width: 100%;
       height: 100%;
       display:block;
-	  bottom: -6px;   /* try -1px to -6px */
     }
-
-    footer{
-      margin-top: 18px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    footer a{
-      color: inherit;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(11,11,15,.2);
-    }
-    
-    .status-badge {
-  display: inline-block;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(198,62,19,0.08);
-  color: #C63E13;
-  margin-bottom: 12px;
-}
   </style>
 </head>
 
@@ -283,57 +287,52 @@
       <!-- Left: copy -->
       <section>
         <div class="status-badge">Major redesign launching soon</div>
-		 <h1 class="hero-title">
-		  Jump Start<br />
-		  <span class="title-line">
-			Your <span class="accent">Pack Lists</span>
-			<span class="kangaroo" aria-hidden="true">
-			  <canvas id="rive-kangaroo"></canvas>
-			</span>
-		  </span>
-		</h1>
+
+        <h1 class="hero-title">
+          Jump Start<br />
+          <span class="title-line">
+            Your <span class="accent">Pack Lists</span>
+            <span class="kangaroo" aria-hidden="true">
+              <canvas id="rive-kangaroo"></canvas>
+            </span>
+          </span>
+        </h1>
+
         <p class="subhead">
           Packaroo is the smartest way to prep and pack for your next adventure. Designed to handle simple trip planning as well as the systems used by pro travelers.
         </p>
-        
-       <ul class="features">
-  <li><span class="dot"></span>Create complete packing lists in seconds — not minutes.</li>
-  <li><span class="dot"></span>Save reusable bundles of gear you always bring.</li>
-  <li><span class="dot"></span>Add those bundles to any trip instantly with two taps.</li>
-  <li><span class="dot"></span>Check items off as you pack to stay organized and stress-free.</li>
-  <li><span class="dot"></span>Share and collaborate on lists with friends or fellow travelers.</li>
-  <li><span class="dot"></span>Keep everything in sync across all your devices with iCloud.</li>
-</ul>
 
-        <!-- Replace this with your real waitlist form action (Buttondown/Mailchimp/etc.) -->
+        <ul class="features">
+          <li><span class="dot"></span>Create complete packing lists in seconds — not minutes.</li>
+          <li><span class="dot"></span>Save reusable bundles of gear you always bring.</li>
+          <li><span class="dot"></span>Add those bundles to any trip instantly with two taps.</li>
+          <li><span class="dot"></span>Check items off as you pack to stay organized and stress-free.</li>
+          <li><span class="dot"></span>Share and collaborate on lists with friends or fellow travelers.</li>
+          <li><span class="dot"></span>Keep everything in sync across all your devices with iCloud.</li>
+        </ul>
+
         <div class="ctaRow">
           <form class="input" onsubmit="event.preventDefault(); alert('Hook this up to your email provider.');">
             <input type="email" required placeholder="Email address" aria-label="Email address" />
             <button class="btn" type="submit">Join waitlist</button>
           </form>
-                 
         </div>
 
         <p class="note">No spam. Just Packaroo updates.</p>
-      
 
-        <footer>Built in Colorado. <a href="mailto:support@packaroo.app">support@packaroo.app</a>
-        </footer>
-        
+        <footer>Built in Colorado. <a href="mailto:support@packaroo.app">support@packaroo.app</a></footer>
+
         <footer class="legal">
-		  <a href="/terms.html">Terms</a>
-		  <span>·</span>
-		  <a href="/privacy.html">Privacy</a>
-</footer>
-
+          <a href="/terms.html">Terms</a>
+          <span>·</span>
+          <a href="/privacy.html">Privacy</a>
+        </footer>
       </section>
 
       <!-- Right: hero -->
       <section class="hero" aria-label="App preview">
-        <!-- Put your device/hero image here -->
         <img class="device" src="./device-hero.png" alt="Packaroo app preview on device" />
 
-        <!-- Rive overlay anchored bottom-right -->
         <div class="riveOverlay" aria-hidden="true">
           <canvas id="packarooRive" width="603" height="1319"></canvas>
         </div>
@@ -342,18 +341,18 @@
     </div>
   </div>
 
-<script>
-  const STATE_MACHINE_NAME = "State Machine 1";
-  const canvas = document.getElementById("packarooRive");
+  <script>
+    const STATE_MACHINE_NAME = "State Machine 1";
+    const canvas = document.getElementById("packarooRive");
 
-  new rive.Rive({
-    src: "./kangaroo.riv",
-    canvas,
-    autoplay: true,
-    stateMachines: [STATE_MACHINE_NAME],
-    fit: rive.Fit.CONTAIN,
-    alignment: rive.Alignment.BOTTOM_CENTER,
-  });
-</script>
+    new rive.Rive({
+      src: "./kangaroo.riv",
+      canvas,
+      autoplay: true,
+      stateMachines: [STATE_MACHINE_NAME],
+      fit: rive.Fit.CONTAIN,
+      alignment: rive.Alignment.BOTTOM_CENTER,
+    });
+  </script>
 </body>
 </html>
