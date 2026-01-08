@@ -268,6 +268,25 @@
       height: 100%;
       display:block;
     }
+    
+		#notify-success {
+	  font-size: 14px;
+	  color: var(--text);
+	  line-height: 1.45;
+	}
+	
+	#notify-success strong {
+	  font-weight: 500;
+	}
+	
+	#notify-success {
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
   </style>
 </head>
 
@@ -302,13 +321,25 @@
           <li><span class="dot"></span>Keep everything in sync across all your devices with iCloud.</li>
         </ul>
 
-        <div class="ctaRow">
-          <form class="input" onsubmit="event.preventDefault(); alert('Hook this up to your email provider.');">
-            <input type="email" required placeholder="Email address" aria-label="Email address" />
-            <button class="btn" type="submit">Get notified</button>
-          </form>
-        </div>
+<div class="ctaRow">
+  <form id="notify-form" class="input">
+    <input
+      type="email"
+      name="email"
+      required
+      placeholder="Email address"
+      aria-label="Email address"
+    />
+    <button class="btn" type="submit">Get notified</button>
+  </form>
 
+  <div id="notify-success" hidden>
+    <strong>You’re on the list.</strong><br />
+    <span>We’ll email you when the new version launches.</span>
+  </div>
+</div>
+
+<p class="note">Get notified when the new version launches.</p>
         <p class="note">Get notified when the new version launches.</p>
 
         <footer>Built in Colorado. <a href="mailto:support@packaroo.app">support@packaroo.app</a></footer>
@@ -341,5 +372,38 @@
       alignment: rive.Alignment.BOTTOM_CENTER,
     });
   </script>
+  
+  <script>
+  const form = document.getElementById("notify-form");
+  const success = document.getElementById("notify-success");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = form.email.value;
+
+    try {
+      const res = await fetch(
+        "https://buttondown.com/api/emails/embed-subscribe/pilcher",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      if (res.ok) {
+        form.style.display = "none";
+        success.hidden = false;
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      alert("Network error. Please try again.");
+    }
+  });
+</script>
 </body>
 </html>
