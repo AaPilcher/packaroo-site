@@ -62,29 +62,25 @@
       border-radius: 999px;
       background: rgba(198,62,19,0.08);
       color: #C63E13;
-
-      /* rhythm */
       margin: 0 0 1rem 0;
     }
 
     /* --- Headline --- */
     .hero-title{
       font-size: clamp(34px, 4.2vw, 56px);
-      line-height: 1.02;        /* a touch more comfortable than .95 */
+      line-height: 1.02;
       letter-spacing: -0.03em;
-
-      /* rhythm */
       margin: 0 0 0.75rem 0;
     }
 
     .accent { color: #C63E13; }
 
-    /* --- Inline kangaroo (kept, but NOT driving layout too much) --- */
+    /* --- Inline kangaroo (kept subtle) --- */
     .title-line{
       display: inline-flex;
       align-items: baseline;
       gap: 0.22em;
-      flex-wrap: wrap;          /* prevents weird overflow on narrower widths */
+      flex-wrap: wrap;
     }
 
     .kangaroo{
@@ -105,8 +101,6 @@
       line-height: 1.55;
       color: var(--muted);
       max-width: 42ch;
-
-      /* rhythm */
       margin: 0 0 1.25rem 0;
     }
 
@@ -119,8 +113,6 @@
       list-style: none;
       color: var(--muted);
       font-size: 14px;
-
-      /* rhythm */
       margin: 0 0 1.5rem 0;
     }
 
@@ -130,7 +122,7 @@
 
     .features li{
       display:flex;
-      align-items:flex-start;   /* better with multi-line bullets */
+      align-items:flex-start;
       gap: 10px;
       line-height: 1.45;
     }
@@ -141,7 +133,7 @@
       border-radius: 999px;
       background: rgba(11,11,15,.35);
       flex: 0 0 auto;
-      margin-top: 0.45em;       /* centers dot visually with first line */
+      margin-top: 0.45em;
     }
 
     /* --- CTA --- */
@@ -150,8 +142,6 @@
       gap: 10px;
       flex-wrap: wrap;
       align-items:center;
-
-      /* rhythm */
       margin: 0 0 0.75rem 0;
     }
 
@@ -183,14 +173,13 @@
       border-radius: 12px;
       cursor:pointer;
       font-size: 14px;
+      font-weight: 500; /* optional polish */
       white-space: nowrap;
     }
 
     .note{
       font-size: 13px;
       color: var(--muted);
-
-      /* rhythm */
       margin: 0 0 1.25rem 0;
     }
 
@@ -202,7 +191,7 @@
     }
 
     footer + footer{
-      margin-top: 0.75rem;      /* legal sits close but distinct */
+      margin-top: 0.75rem;
     }
 
     footer a{
@@ -214,13 +203,6 @@
     .legal {
       font-size: 0.75rem;
       opacity: 0.55;
-      text-align: left;
-    }
-
-    .legal a {
-      color: inherit;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(11,11,15,.2);
     }
 
     .legal a:hover {
@@ -228,7 +210,7 @@
       text-decoration: underline;
     }
 
-    /* --- Hero (device image + Rive overlay) --- */
+    /* --- Hero --- */
     .hero{
       position: relative;
       width: 100%;
@@ -258,14 +240,13 @@
       height: auto;
       display:block;
       filter: drop-shadow(0 18px 40px rgba(11,11,15,.18));
-      position: relative;
       z-index: 1;
     }
 
     .riveOverlay{
       position: absolute;
       right: 0;
-      bottom: -12px;            /* keeps feet seated visually */
+      bottom: -12px;
       width: 180px;
       aspect-ratio: 603 / 1319;
       pointer-events: none;
@@ -284,7 +265,7 @@
   <div class="page">
     <div class="shell">
 
-      <!-- Left: copy -->
+      <!-- Left -->
       <section>
         <div class="status-badge">Major redesign launching soon</div>
 
@@ -314,25 +295,21 @@
         <div class="ctaRow">
           <form class="input" onsubmit="event.preventDefault(); alert('Hook this up to your email provider.');">
             <input type="email" required placeholder="Email address" aria-label="Email address" />
-            <button class="btn" type="submit">Join waitlist</button>
+            <button class="btn" type="submit">Get notified</button>
           </form>
         </div>
 
-        <p class="note">No spam. Just Packaroo updates.</p>
+        <p class="note">Get notified when the new version launches.</p>
 
         <footer>Built in Colorado. <a href="mailto:support@packaroo.app">support@packaroo.app</a></footer>
-
         <footer class="legal">
-          <a href="/terms.html">Terms</a>
-          <span>·</span>
-          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a>
         </footer>
       </section>
 
-      <!-- Right: hero -->
+      <!-- Right -->
       <section class="hero" aria-label="App preview">
         <img class="device" src="./device-hero.png" alt="Packaroo app preview on device" />
-
         <div class="riveOverlay" aria-hidden="true">
           <canvas id="packarooRive" width="603" height="1319"></canvas>
         </div>
