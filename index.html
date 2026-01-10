@@ -280,8 +280,8 @@
 	}
 	
 	#notify-success {
-  animation: fadeIn 0.25s ease;
-}
+	  animation: fadeIn 0.25s ease;
+	}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(2px); }
@@ -322,7 +322,16 @@
         </ul>
 
 <div class="ctaRow">
-  <form id="notify-form" class="input" tag="website">
+  <form
+    id="notify-form"
+    class="input"
+    action="https://buttondown.com/api/emails/embed-subscribe/pilcher"
+    method="post"
+    target="bd-hidden"
+  >
+    <input type="hidden" name="embed" value="1" />
+    <input type="hidden" name="tag" value="packaroo-landing" />
+
     <input
       type="email"
       name="email"
@@ -330,13 +339,17 @@
       placeholder="Email address"
       aria-label="Email address"
     />
-    <button class="btn" type="submit">Get notified</button>
+    <button class="btn" id="notify-btn" type="submit">Get notified</button>
   </form>
 
   <div id="notify-success" hidden>
     <strong>You’re on the list.</strong><br />
-    <span>We’ll email you when the new version launches.</span>
+    <p class="note" id="notify-note">Get notified when the new version launches.</p>
+    
   </div>
+
+  <!-- hidden target to prevent page navigation -->
+  <iframe name="bd-hidden" id="bd-hidden" style="display:none;"></iframe>
 </div>
 
 <p class="note">Get notified when the new version launches.</p>
@@ -374,37 +387,38 @@
   
   <!-- asdf -->
   
-  <script>
-  const form = document.getElementById("notify-form");
-  const success = document.getElementById("notify-success");
+<script>
+  (function () {
+    const form = document.getElementById("notify-form");
+    const btn = document.getElementById("notify-btn");
+    const success = document.getElementById("notify-success");
+    const iframe = document.getElementById("bd-hidden");
+    const note = document.getElementById("notify-note");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    if (!form || !btn || !success || !iframe) return;
 
-    const email = form.email.value;
+    let pending = false;
 
-    try {
-      const res = await fetch(
-        "https://buttondown.com/api/emails/embed-subscribe/pilcher",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+    form.addEventListener("submit", () => {
+      pending = true;
+      btn.disabled = true;
+      btn.textContent = "Submitting…";
+    });
 
-      if (res.ok) {
-        form.style.display = "none";
-        success.hidden = false;
-      } else {
-        alert("Something went wrong. Please try again.");
+    iframe.addEventListener("load", () => {
+      if (!pending) return;
+      pending = false;
+
+      form.style.display = "none";
+      success.hidden = false;
+
+      if (note) {
+        note.style.display = "none";
       }
-    } catch (err) {
-      alert("Network error. Please try again.");
-    }
-  });
+    });
+  })();
 </script>
+
+
 </body>
 </html>
