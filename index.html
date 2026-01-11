@@ -220,47 +220,51 @@
     }
 
     /* --- Hero --- */
-    .hero{
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1.05;
-      border-radius: var(--radius);
-      background:
-		radial-gradient(
-		  120% 120% at 30% 20%,
-		  #ffffff 0%,
-		  #FDF6E3 35%,
-		  #FFE5A0 70%,
-		  #F2D88A 100%
-		),
-		linear-gradient(
-		  180deg,
-		  #FDF6E3 0%,
-		  #FFE5A0 100%
-		);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display:grid;
-      place-items:center;
-      padding: 18px;
-    }
-
+	 .hero{
+	  position: relative;
+	  isolation: isolate; /* important: keeps pseudo elements contained */
+	  width: 100%;
+	  aspect-ratio: 1 / 1.05;
+	  border-radius: var(--radius);
+	
+	  background:
+		radial-gradient(120% 120% at 30% 15%, #FDF6E3 0%, #FFE5A0 70%, #F2D88A 100%),
+		linear-gradient(180deg, #FDF6E3 0%, #FFE5A0 100%);
+	
+	  /* replace border: 1px solid ... with inset border */
+	  border: none;
+	  box-shadow:
+		0 0 0 1px var(--border) inset,
+		var(--shadow);
+	
+	  overflow: hidden;
+	  display: grid;
+	  place-items: center;
+	  padding: 18px;
+	}
+	
     .hero::after{
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
-      pointer-events: none;
-    }
+	  content: "";
+	  position: absolute;
+	  inset: 0;
+	  border-radius: inherit;  /* key */
+	  z-index: 0;              /* key */
+	  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.012'/%3E%3C/svg%3E");
+	  pointer-events: none;
+	}
 
-    .device{
-      width: min(420px, 92%);
-      height: auto;
-      display:block;
-      filter: drop-shadow(0 18px 40px rgba(11,11,15,.18));
-      z-index: 1;
-    }
+	   .device{
+	  width: min(420px, 92%);
+	  height: auto;
+	  display: block;
+	
+	  filter: drop-shadow(0 18px 40px rgba(11,11,15,.18));
+	
+	  /* iOS Safari compositing fix */
+	  transform: translateZ(0);
+	  backface-visibility: hidden;
+	  -webkit-backface-visibility: hidden;
+	}
 
     .riveOverlay{
       position: absolute;
