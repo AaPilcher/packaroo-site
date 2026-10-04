@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["DVX2BBZ68X.com.matic.packaroo-iphone"],
+        "components": [
+          { "/": "/postcards", "comment": "Coffee-shop Gallery entry" },
+          { "/": "/postcards/", "comment": "Coffee-shop Gallery entry" }
+        ]
+      }
+    ]
+  }
+}
