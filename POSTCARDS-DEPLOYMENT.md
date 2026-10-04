@@ -2,16 +2,22 @@
 
 QR destination: https://packaroo.app/postcards/
 
-This change adds one static install page and the Apple association file. It does not send email, store postcards, or require a backend.
+The GitHub Pages site provides the install page. The Cloudflare Worker `packaroo-links`, with custom domain `links.packaroo.app`, serves the association file and browser fallback. Its deployed source is maintained in `cloudflare/packaroo-links.js`.
 
-## Release checklist
+## Routing
 
-1. Release the app version containing Gallery postcard creation, `packaroo://postcards`, and `applinks:packaroo.app`. Confirm Associated Domains is enabled for the app identifier and the distribution signing profile includes it.
-2. Confirm the signed application's application-identifier matches `DVX2BBZ68X.com.matic.packaroo-iphone` before publishing the association file.
-3. Deploy this website branch through the existing GitHub Pages workflow. The `.nojekyll` file ensures `.well-known` is published as static content.
-4. Verify `https://packaroo.app/.well-known/apple-app-site-association` returns 200 directly, with no redirects, and `Content-Type: application/json`. If GitHub Pages returns a different type, configure a Cloudflare response-header transform rule for this exact path to set it to `application/json`; the hostname must be proxied for Cloudflare's rule to apply. Leave unrelated paths and DNS records unchanged.
-5. Verify `/postcards/` returns the install page. No automatic App Store redirect: the page remains useful for returning users and devices that cannot run Packaroo.
-6. Test a real QR scan on iPhone and iPad with the released app installed (cold and warm launch), and without it installed. Allow for Apple's association-file cache. Test fresh onboarding and a scan while another screen is open.
-7. After installation, scan again or return to the page and tap Open Gallery. This version does not implement deferred deep linking across installation.
+- The QR opens Gallery when a compatible app is installed; otherwise it opens the install page.
+- The website's Open Gallery link uses https://links.packaroo.app/postcards/ to allow an app handoff from the main website domain.
+- Without an app handoff, the Worker redirects to https://packaroo.app/postcards/?open=gallery. This displays installation guidance instead of another Open Gallery link.
+- After installation, open Packaroo and choose Send a Postcard on the welcome screen. Universal Links do not preserve the original action across App Store installation.
+- No email, postcard storage, or deferred-link service is used.
 
-Do not print the sign until the live link and released app work together. Website files are prepared locally; no deployment is performed by this change.
+## Deployment and verification
+
+1. Publish website changes to the GitHub Pages `main` branch.
+2. Deploy `cloudflare/packaroo-links.js` to the `packaroo-links` Worker with custom domain `links.packaroo.app`.
+3. Verify both domains' `/.well-known/apple-app-site-association` endpoints return 200 directly, valid JSON, and `Content-Type: application/json`. The apex uses the Cloudflare Apple association JSON header transform; the Worker sets its own header.
+4. Install a signed app build containing both associated domains (`applinks:packaroo.app` and `applinks:links.packaroo.app`) and Gallery routing. Its application identifier must match `DVX2BBZ68X.com.matic.packaroo-iphone`.
+5. Test real QR scans and the website Open Gallery link on iPhone and iPad, with and without the compatible app. Account for Apple's association cache. Test cold/warm launch and fresh onboarding.
+
+The public App Store build must contain this functionality before printing the coffee-shop sign. The existing QR URL does not need to change.
