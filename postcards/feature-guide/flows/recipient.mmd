@@ -1,0 +1,30 @@
+sequenceDiagram
+    actor Recipient
+    participant Browser
+    participant Worker as Postcard Worker
+    participant Analytics as Aggregate analytics
+    participant Site as packaroo.app
+    participant Store as App Store
+    Recipient->>Browser: Open postcard link
+    Browser->>Worker: Request card
+    alt Missing or expired
+        Worker-->>Browser: Unavailable page
+    else Valid postcard
+        Worker-->>Browser: Interactive card, stamp, attribution, and badge
+        Browser->>Browser: Wait until page is visible
+        Browser-->>Worker: recipient_page_opened, once per page load
+        Worker-->>Analytics: Aggregate event
+        Note over Recipient,Browser: Flip and save images without subscription or installation
+        opt Select header app icon
+            Browser-->>Worker: packaroo_icon_clicked
+            Worker-->>Analytics: Aggregate event
+            Browser->>Site: Open in a new tab
+        end
+        opt Select App Store badge
+            Browser-->>Worker: app_store_badge_clicked
+            Worker-->>Analytics: Aggregate event
+            Browser->>Store: Open listing in a new tab
+        end
+    end
+    Note over Browser,Analytics: No card token, URL, content, cookies, or identity in events
+    Note over Browser,Store: Click counts do not prove an install or subscription

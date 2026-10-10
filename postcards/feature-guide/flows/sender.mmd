@@ -1,0 +1,43 @@
+sequenceDiagram
+    actor Sender
+    participant App as Packaroo app
+    participant Store as StoreKit
+    participant Worker as Postcard Worker
+    participant Analytics as Aggregate analytics
+    participant Share as System share sheet
+    Sender->>App: Tap paper plane
+    alt Existing unexpired receipt
+        App->>Share: Share saved link
+        Note over App,Share: No upload, allowance charge, or creation event
+    else New or edited postcard
+        App->>App: Check subscription, free original, or correction
+        alt No creation entitlement
+            App-->>Sender: Present postcard paywall
+            App-->>Analytics: postcard_paywall_shown via Worker
+            opt Successful production purchase in this sheet
+                Sender->>Store: Purchase subscription
+                Store-->>App: Verified active entitlement
+                App-->>Analytics: postcard_subscription_purchased via Worker
+            end
+            Note over Sender,App: Return to the composer and tap to share again
+        else Creation allowed
+            opt Uses free original or free correction
+                App-->>Sender: Explain allowance and ask for confirmation
+                Sender->>App: Confirm Create Link
+            end
+            App->>Worker: Upload postcard and creation category
+            alt Hosting succeeds
+                Worker->>Worker: Save card with one-year expiry
+                Worker-->>Analytics: postcard_created, category
+                Worker-->>App: Link and expiration receipt
+                App->>App: Validate and cache receipt; consume free allowance if applicable
+                App->>App: Save hosted version in local library
+                App->>Share: Open share sheet with link
+                Note over Sender,Share: Cancel does not restore allowance; link can be reshared
+            else Hosting or receipt validation fails
+                App-->>Sender: Show error; keep draft and allowance
+                Note over App,Worker: If hosting succeeded but receipt was lost, server creation still counts
+            end
+        end
+    end
+    Note over App,Analytics: Best-effort analytics never gates sharing; debug app reporting is suppressed
