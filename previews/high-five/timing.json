@@ -1,0 +1,97 @@
+{
+  "width": 768,
+  "height": 768,
+  "durationMs": 2400,
+  "contactMs": 630,
+  "pushIn": {
+    "startMs": 390,
+    "endMs": 1120,
+    "fromScale": 1,
+    "toScale": 1.11,
+    "anchor": [
+      384,
+      160
+    ],
+    "easing": "easeOutCubic"
+  },
+  "frames": [
+    {
+      "file": "01-ready.png",
+      "label": "Ready",
+      "startMs": 0,
+      "durationMs": 180
+    },
+    {
+      "file": "02-dip.png",
+      "label": "Dip",
+      "startMs": 180,
+      "durationMs": 70
+    },
+    {
+      "file": "03-crouched.png",
+      "label": "Crouch",
+      "startMs": 250,
+      "durationMs": 90
+    },
+    {
+      "file": "04-drive.png",
+      "label": "Push off",
+      "startMs": 340,
+      "durationMs": 50
+    },
+    {
+      "file": "05-takeoff.png",
+      "label": "Takeoff",
+      "startMs": 390,
+      "durationMs": 55
+    },
+    {
+      "file": "06-rising.png",
+      "label": "Rising",
+      "startMs": 445,
+      "durationMs": 60
+    },
+    {
+      "file": "07-airborne.png",
+      "label": "Airborne",
+      "startMs": 505,
+      "durationMs": 70
+    },
+    {
+      "file": "08-approach.png",
+      "label": "Almost touching",
+      "startMs": 575,
+      "durationMs": 55
+    },
+    {
+      "file": "09-contact.png",
+      "label": "Contact",
+      "startMs": 630,
+      "durationMs": 55
+    },
+    {
+      "file": "10-impact-start.png",
+      "label": "Impact begins",
+      "startMs": 685,
+      "durationMs": 45
+    },
+    {
+      "file": "11-impact-grow.png",
+      "label": "Strokes extend",
+      "startMs": 730,
+      "durationMs": 50
+    },
+    {
+      "file": "12-hold.png",
+      "label": "Freeze",
+      "startMs": 780,
+      "durationMs": 1620
+    }
+  ],
+  "notes": [
+    "Transparent PNG sequence; frame durations are variable.",
+    "Apply the camera transform separately during playback.",
+    "Frames 09–12 share exactly the same body pixels; only the impact-stroke reveal changes.",
+    "Play once, then retain the final frame. For Reduce Motion, show the final frame without a push-in."
+  ]
+}

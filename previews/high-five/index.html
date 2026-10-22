@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Packaroo — High-five animation preview</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    :root{color-scheme:light dark;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f4f0;color:#22231f}
+    *{box-sizing:border-box}body{margin:0}main{max-width:840px;margin:auto;padding:28px 24px 32px}
+    header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{font-size:20px;font-weight:600;letter-spacing:-.35px;margin:0}a{color:inherit;text-underline-offset:3px}header p{font-size:13px;color:#64665f;margin:0}
+    .stage{display:flex;justify-content:center}canvas{display:block;width:min(100%,560px);height:auto;aspect-ratio:1;background:transparent}
+    .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}button,select{font:inherit;font-size:14px;padding:9px 14px;border:1px solid #d5d6cf;border-radius:8px;background:transparent;color:inherit;min-height:40px}button:hover{background:#e9e9e3}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #177b72;outline-offset:3px}.primary{background:#242a25;color:#fff;border-color:#242a25}.primary:hover{background:#424b43}
+    .speed{display:flex;align-items:center;gap:8px;font-size:13px;margin-left:auto}.readout{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:#64665f;margin-top:20px;font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:#267b6e;margin:12px 0 15px;min-height:24px}
+    .strip{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px}.strip button{padding:0;border-radius:5px;min-height:0;overflow:hidden;background:transparent}.strip button[aria-pressed=true]{border-color:#267b6e;box-shadow:0 0 0 1px #267b6e}.strip img{display:block;width:100%;height:auto}.strip span{display:block;font-size:10px;padding:2px 0 5px;color:#64665f}.note{font-size:12px;color:#64665f;line-height:1.5;margin-top:18px}
+    @media(max-width:520px){main{padding:20px 16px}.strip{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}.speed{margin-left:0}header p{width:100%}}
+    @media(prefers-color-scheme:dark){:root{background:#252722;color:#eeeee8}header p,.readout,.note,.strip span{color:#b2b5aa}button,select{border-color:#53574e}button:hover{background:#373d33}.primary{background:#eeeee8;color:#252722}.primary:hover{background:#d3d7cb}.strip button[aria-pressed=true]{border-color:#87bca3;box-shadow:0 0 0 1px #87bca3}}
+  </style>
+</head>
+<body>
+<main>
+  <header><h1>Kangaroo high-five</h1><p>12 frames · 2.4 seconds · transparent artwork</p></header>
+  <div class="stage"><canvas width="768" height="768" aria-label="Two kangaroos crouch, jump, and high-five. Their bodies freeze as four black strokes appear and the camera settles."></canvas></div>
+  <div class="controls">
+    <button class="primary" id="play" type="button">Play</button>
+    <button id="replay" type="button">Replay</button>
+    <label class="speed">Speed <select id="speed"><option value="1">Normal</option><option value="0.5">Half speed</option><option value="0.25">Quarter speed</option></select></label>
+  </div>
+  <div class="readout"><span id="pose">Loading frames…</span><span id="time">0.00 / 2.40 s</span></div>
+  <input id="scrubber" type="range" min="0" max="2400" step="1" value="0" aria-label="Animation position">
+  <div class="strip" id="frames" aria-label="Inspect individual frames"></div>
+  <p class="note">Contact at 0.63 s. The bodies stay frozen while the strokes appear. The 11% push-in stops at 1.12 s; the final image holds.</p>
+  <p class="note"><a href="kangaroo-high-five-12-frames.zip" download>Download the 12 PNGs and playback files</a> · <a href="preview.mp4" download>Download video preview</a></p>
+</main>
+<script src="playback.js"></script>
+<script>
+(async function(){
+  const {spec,draw}=HighFivePlayback, canvas=document.querySelector('canvas'), ctx=canvas.getContext('2d');
+  const play=document.querySelector('#play'),scrubber=document.querySelector('#scrubber'),speed=document.querySelector('#speed'),pose=document.querySelector('#pose'),time=document.querySelector('#time');
+  const images=await Promise.all(spec.frames.map(f=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('Unable to load '+f.file));im.src='frames/'+f.file;})));
+  let position=0,running=false,lastTimestamp=null,animationId=0;
+  function paint(ms){position=Math.max(0,Math.min(spec.durationMs,ms));const s=draw(ctx,images,position);scrubber.value=position;pose.textContent=String(s.index+1).padStart(2,'0')+' / 12 · '+s.frame.label;time.textContent=(position/1000).toFixed(2)+' / 2.40 s';document.querySelectorAll('.strip button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===s.index)));return s;}
+  function stop(){running=false;lastTimestamp=null;cancelAnimationFrame(animationId);play.textContent='Play';}
+  function tick(timestamp){if(!running)return;if(lastTimestamp!==null)paint(position+(timestamp-lastTimestamp)*Number(speed.value));lastTimestamp=timestamp;if(position>=spec.durationMs){stop();return;}animationId=requestAnimationFrame(tick);}
+  function start(restart=false){if(restart||position>=spec.durationMs)paint(0);stop();running=true;play.textContent='Pause';animationId=requestAnimationFrame(tick);}
+  play.addEventListener('click',()=>running?stop():start());document.querySelector('#replay').addEventListener('click',()=>start(true));scrubber.addEventListener('input',()=>{stop();paint(Number(scrubber.value));});speed.addEventListener('change',()=>lastTimestamp=null);
+  spec.frames.forEach((f,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Frame '+(i+1)+': '+f.label);b.innerHTML='<img src="frames/'+f.file+'" alt=""><span>'+String(i+1).padStart(2,'0')+'</span>';b.addEventListener('click',()=>{stop();paint(f.startMs);});document.querySelector('#frames').appendChild(b);});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+  window.preview={spec,images,paint,stop,start,get position(){return position;}};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)paint(spec.durationMs);else{paint(0);start();}
+  window.previewReady=true;
+})().catch(error=>{document.querySelector('#pose').textContent=error.message;console.error(error);});
+</script>
+</body>
+</html>
