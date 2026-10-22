@@ -14,6 +14,20 @@
     ],
     "easing": "easeOutCubic"
   },
+  "impact": {
+    "startMs": 900,
+    "endMs": 1300,
+    "fromScale": 1,
+    "toScale": 1.9,
+    "crop": [
+      328,
+      89,
+      100,
+      51
+    ],
+    "expansionEasing": "easeOut",
+    "fadeEasing": "easeIn"
+  },
   "frames": [
     {
       "file": "01-ready.png",
@@ -83,15 +97,17 @@
     },
     {
       "file": "12-hold.png",
-      "label": "Freeze",
+      "label": "Full impact",
       "startMs": 780,
       "durationMs": 1620
     }
   ],
   "notes": [
-    "Transparent PNG sequence; frame durations are variable.",
-    "Apply the camera transform separately during playback.",
-    "Frames 09–12 share exactly the same body pixels; only the impact-stroke reveal changes.",
-    "Play once, then retain the final frame. For Reduce Motion, show the final frame without a push-in."
+    "12 transparent PNGs with variable frame durations. The PNGs are unchanged; playback.js supplies the camera and impact effects.",
+    "At contact, hold the body from 09-contact.png. Reveal the impact crop from frames 10–12 over that body.",
+    "From 900 to 1300 ms, scale the impact crop from 1 to 1.9 about the paw contact point with ease-out, while fading its opacity from 1 to 0 with ease-in.",
+    "Apply the camera transform to both layers. Its push-in stops at 1120 ms.",
+    "Play once, then hold the clean contact pose with no impact marks. For Reduce Motion, show that final composite immediately.",
+    "Open preview.html to play the sequence. The final PNG contains the full impact reveal; it is not the final held composite."
   ]
 }
