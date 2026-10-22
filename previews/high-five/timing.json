@@ -15,16 +15,12 @@
     "easing": "easeOutCubic"
   },
   "impact": {
-    "startMs": 900,
-    "endMs": 1300,
+    "startMs": 840,
+    "endMs": 1120,
     "fromScale": 1,
-    "toScale": 1.9,
-    "crop": [
-      328,
-      89,
-      100,
-      51
-    ],
+    "toScale": 1.25,
+    "rendering": "tapered-vector-paths",
+    "lengthScale": 0.82,
     "expansionEasing": "easeOut",
     "fadeEasing": "easeIn"
   },
@@ -104,8 +100,8 @@
   ],
   "notes": [
     "12 transparent PNGs with variable frame durations. The PNGs are unchanged; playback.js supplies the camera and impact effects.",
-    "At contact, hold the body from 09-contact.png. Reveal the impact crop from frames 10–12 over that body.",
-    "From 900 to 1300 ms, scale the impact crop from 1 to 1.9 about the paw contact point with ease-out, while fading its opacity from 1 to 0 with ease-in.",
+    "At contact, hold the body from 09-contact.png. Draw four tapered vector dashes in the same three reveal stages as frames 10–12; do not enlarge their raster crops.",
+    "From 840 to 1120 ms, spread the vector dashes from scale 1 to 1.25 about the paw contact point with ease-out, while fading opacity from 1 to 0 with ease-in. The dashes are 18 percent shorter than the original artwork.",
     "Apply the camera transform to both layers. Its push-in stops at 1120 ms.",
     "Play once, then hold the clean contact pose with no impact marks. For Reduce Motion, show that final composite immediately.",
     "Open preview.html to play the sequence. The final PNG contains the full impact reveal; it is not the final held composite."

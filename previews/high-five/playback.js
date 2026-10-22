@@ -5,7 +5,7 @@
     durationMs: 2400,
     contactMs: 630,
     pushIn: { startMs: 390, endMs: 1120, fromScale: 1, toScale: 1.11, anchor: [384, 160], easing: 'easeOutCubic' },
-    impact: { startMs: 900, endMs: 1300, fromScale: 1, toScale: 1.9, crop: [328, 89, 100, 51], expansionEasing: 'easeOut', fadeEasing: 'easeIn' },
+    impact: { startMs: 840, endMs: 1120, fromScale: 1, toScale: 1.25, rendering: 'tapered-vector-paths', lengthScale: 0.82, expansionEasing: 'easeOut', fadeEasing: 'easeIn' },
     frames: [
       ['01-ready.png', 'Ready', 0],
       ['02-dip.png', 'Dip', 180],
@@ -21,6 +21,27 @@
       ['12-hold.png', 'Full impact', 780]
     ].map(([file, label, startMs], index, rows) => ({ file, label, startMs, durationMs: (rows[index + 1]?.[2] ?? 2400) - startMs }))
   };
+  const impactRays = [
+    [[357, 139], [331.5, 115.5]],
+    [[370.5, 130], [356, 93.5]],
+    [[386, 129], [391.5, 95.5]],
+    [[400.5, 137.5], [424, 108.5]]
+  ];
+  function drawImpact(ctx, reveal) {
+    ctx.fillStyle = '#2f2b1f';
+    ctx.beginPath();
+    for (const [[x, y], [outerX, outerY]] of impactRays) {
+      const dx = outerX - x, dy = outerY - y, length = Math.hypot(dx, dy);
+      const nx = -dy / length, ny = dx / length;
+      const tipX = x + dx * spec.impact.lengthScale * reveal, tipY = y + dy * spec.impact.lengthScale * reveal;
+      const middleX = x + (tipX - x) * 0.6, middleY = y + (tipY - y) * 0.6;
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(middleX + nx * 2.8, middleY + ny * 2.8, tipX, tipY);
+      ctx.quadraticCurveTo(middleX - nx * 2.4, middleY - ny * 2.4, x, y);
+      ctx.closePath();
+    }
+    ctx.fill();
+  }
   // Standard ease-in curve (0.42, 0, 1, 1); reflecting it gives ease-out.
   function easeIn(progress) {
     if (progress <= 0 || progress >= 1) return progress;
@@ -45,7 +66,7 @@
   }
   function draw(ctx, images, milliseconds, background) {
     const state = stateAt(milliseconds);
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.setTransform(ctx.canvas.width / spec.width, 0, 0, ctx.canvas.height / spec.height, 0, 0);
     ctx.clearRect(0, 0, spec.width, spec.height);
     if (background) { ctx.fillStyle = background; ctx.fillRect(0, 0, spec.width, spec.height); }
     ctx.save();
@@ -60,8 +81,7 @@
       ctx.translate(x, y);
       ctx.scale(state.impactScale, state.impactScale);
       ctx.translate(-x, -y);
-      const [cropX, cropY, cropWidth, cropHeight] = spec.impact.crop;
-      ctx.drawImage(images[state.index], cropX, cropY, cropWidth, cropHeight, cropX, cropY, cropWidth, cropHeight);
+      drawImpact(ctx, state.index === 9 ? 0.28 : state.index === 10 ? 0.65 : 1);
       ctx.restore();
     }
     ctx.restore();
